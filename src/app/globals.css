@@ -2,26 +2,53 @@
 
 @theme inline {
   --font-inter: var(--font-inter);
-  --font-geist-sans: var(--font-geist-sans);
-  --font-geist-mono: var(--font-geist-mono);
 }
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: white;
 }
+
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: black; }
+}
+
+.typing-effect {
+  overflow: hidden; 
+  border-right: .15em solid black; 
+  white-space: initial; 
+  animation: 
+    typing 4s steps(40, end),
+    blink-caret .75s step-end infinite;
+}
+
+@media (min-width: 640px) { 
+    .typing-effect {
+        white-space: nowrap;
+    }
+}
+
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: white;
+    --foreground: #F5F5F5;
   }
 }
+
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), var(--font-geist-sans), var(--font-geist-mono), sans-serif;
+  font-family: var(--font-inter), sans-serif;
 }
 
 button {
