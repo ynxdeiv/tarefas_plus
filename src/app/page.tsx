@@ -1,5 +1,8 @@
 import Image from "next/image";
 import heroImg from "../../public/Hero_Image.png";
+import { Metadata } from "next";
+
+
 
 export default function Home() {
   const randomNumber = (): number => {
@@ -10,6 +13,7 @@ export default function Home() {
   };
 
   return (
+
     <main className="flex min-h-screen flex-col items-center justify-center p-8 md:p-24">
       <div className="flex flex-col items-center text-center gap-4 max-w-4xl mx-auto">
         <Image
