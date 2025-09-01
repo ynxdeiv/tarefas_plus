@@ -1,13 +1,29 @@
-import { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Tarefas Plus | Meu Dashboard",
-  description: "Gerencie suas tarefas e estudos de forma eficiente.",
-};
-export default function Dashboard(){
-    
-    return(
-        <>
-        <h1>teste</h1>
-        </>
-    );
+'use client'
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+
+
+
+export default function Dashboard() {
+
+
+
+
+  const { data: session } = useSession();
+
+
+  if (!session) {
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
+    }
+    return null;
+  }
+
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold">Olá</h1>
+      <p>Bem-vindo ao seu dashboard!</p>
+      <Link href="/">Voltar para home</Link>
+    </div>
+  );
 }
