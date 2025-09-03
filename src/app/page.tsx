@@ -22,7 +22,7 @@ export default function Home() {
           priority
           className="mb-4 w-auto h-auto md:max-w-lg lg:max-w-xl"
         />
-        <h1 className="text-xl md:text-4xl font-bold leading-tight text-black typing-effect">
+        <h1 className="text-xl md:text-4xl  leading-tight text-black typing-effect">
           Sistema feito para você organizar seus estudos e tarefas
         </h1>
         <section className="flex flex-col sm:flex-row gap-2 md:gap-4">
