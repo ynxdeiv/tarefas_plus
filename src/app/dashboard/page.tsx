@@ -1,10 +1,22 @@
 'use client'
 import { useSession } from "next-auth/react";
 import { Textarea } from "@/components/textarea";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { db } from '../../services/firebaseConnection'
-import { addDoc, collection } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  query,
+  orderBy,
+  where,
+  onSnapshot
+} from 'firebase/firestore'
+import { TaskProps } from "../interface";
 export default function Dashboard() {
+  const [input, setInput] = useState('')
+  const [publicTask, setPublicTask] = useState(false)
+  const [task, setTask] = useState<TaskProps[]>([]);
+  const { data: session } = useSession();
 
   async function handleRegister(e: FormEvent) {
     e.preventDefault();
@@ -14,7 +26,7 @@ export default function Dashboard() {
       await addDoc(collection(db, 'tarefas'), {
         tarefa: input,
         created: new Date(),
-        user: session?.user,
+        user: session?.user?.email ?? '',
         public: publicTask
       });
       setInput('');
@@ -27,11 +39,36 @@ export default function Dashboard() {
   function handleChangePublic(event: ChangeEvent<HTMLInputElement>) {
     setPublicTask(event.target.checked)
   }
-
-  const [input, setInput] = useState('')
-  const [publicTask, setPublicTask] = useState(false)
-  const { data: session } = useSession();
-
+  useEffect(() => {
+    async function loadTask() {
+      if (!session?.user?.email) return;
+      
+      
+      const taskRef = collection(db, 'tarefas')
+      const q = query(
+        taskRef,
+        where('user', '==', session?.user?.email)
+      )
+      
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const lista = [] as TaskProps[];
+        snapshot.forEach((doc) => {
+          console.log('Documento encontrado:', doc.data());
+          lista.push({
+            id: doc.id,
+            tarefa: doc.data().tarefa,
+            user: doc.data().user,
+            public: doc.data().public,
+            created: doc.data().created
+          })
+        })
+        setTask(lista);
+      })
+      
+      return () => unsubscribe();
+    }
+    loadTask()
+  }, [session])
 
   if (!session) {
     if (typeof window !== "undefined") {
