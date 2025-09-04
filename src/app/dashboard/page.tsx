@@ -2,18 +2,26 @@
 import { useSession } from "next-auth/react";
 import { Textarea } from "@/components/textarea";
 import { ChangeEvent, FormEvent, useState } from "react";
-
+import { db } from '../../services/firebaseConnection'
+import { addDoc, collection } from 'firebase/firestore'
 export default function Dashboard() {
 
-  const handleRegister = (e: FormEvent) => {
+  async function handleRegister(e: FormEvent) {
     e.preventDefault();
-    if (input === '') {
-      alert('teste')
-      return;
+    if (input === '') return;
+
+    try {
+      await addDoc(collection(db, 'tarefas'), {
+        tarefa: input,
+        created: new Date(),
+        user: session?.user,
+        public: publicTask
+      });
+      setInput('');
+      setPublicTask(false);
+    } catch (err) {
+      console.log(err);
     }
-
-
-
   }
 
   function handleChangePublic(event: ChangeEvent<HTMLInputElement>) {
